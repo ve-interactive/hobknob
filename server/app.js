@@ -2,6 +2,7 @@
 
 var express = require('express');
 var app = express();
+var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var dashboardRoutes = require('./routes/dashboardRoutes');
 var loadBalancerRoutes = require('./routes/loadbalancerRoutes');
@@ -18,7 +19,7 @@ var passport = require('./auth').init(config);
 
 app.set('views', path.join(__dirname, '/../client/views'));
 app.set('view engine', 'jade');
-app.set('port', process.env.PORT || 3006);
+app.set('port', process.env.PORT || 5432);
 
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
@@ -72,7 +73,15 @@ var authoriseUserForThisApplication = function (req, res, next) {
     }
 
     var applicationName = req.params.applicationName;
-    var userEmail = req.user._json.email;
+    var userEmail = null;
+    if (req.user.accessToken) {
+        var waadProfile =  jwt.decode(req.user.accessToken);
+        userEmail = waadProfile.upn;
+    }
+    else{
+        userEmail = req.user._json.email;
+    }
+    console.log(userEmail);
     acl.assert(userEmail, applicationName, function (err, isAuthroised) {
         if (err || !isAuthroised) {
             res.send(403);
@@ -112,6 +121,17 @@ app.get('/auth/google/callback',
         res.redirect('/#!/');
     }
 );
+
+app.get('/auth/azureadoauth2',
+  passport.authenticate('azure')
+);
+
+app.get('/auth/azureadoauth2/callback', 
+  passport.authenticate('azure', { failureRedirect: '/oops' }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
 if (config.plugin && config.plugin.path) {
     require(config.plugin.path)(app);

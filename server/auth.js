@@ -1,8 +1,9 @@
 'use strict';
 
 var passport = require('passport');
+var jwt = require('jsonwebtoken');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var Office365Strategy = require('passport-azure-ad-oauth2').AzureAdOAuth2Strategy;
+var AzureStrategy = require('passport-azure-ad-oauth2');
 
 module.exports.init = function (config) {
     if (config.RequiresAuth) {
@@ -27,20 +28,21 @@ module.exports.init = function (config) {
                 }));
         } else if (config.AuthProviders.AzureAuth)
         {
-          var AZURE_CLIENT_ID = config.AuthProvider.AzureAuth.AzureClientId;
+          var AZURE_CLIENT_ID = config.AuthProviders.AzureAuth.AzureClientId;
           var AZURE_CLIENT_SECRET = config.AuthProviders.AzureAuth.AzureClientSecret;
-          var AZURE_TENANT_ID = config.AuthProvider.AzureAuth.AzureTenantId;
-          var azureCallbackURL = protocolSection + '://' + config.hobknobHost + portSection + '/auth/azure/callback';
+          var AZURE_TENANT_ID = config.AuthProviders.AzureAuth.AzureTenantId;
+          var azureCallbackURL = protocolSection + '://' + config.hobknobHost + portSection + '/auth/azureadoauth2/callback';
 
-          passport.use(new Office365Strategy({
+          passport.use('azure', new AzureStrategy({
                     clientID: AZURE_CLIENT_ID,
                     clientSecret: AZURE_CLIENT_SECRET,
                     callbackURL: azureCallbackURL,
-                    tenant: AZURE_TENANT_ID
+                    tenant: AZURE_TENANT_ID,
+                    resource: 'https://graph.windows.net/'
                   },
                   function (accessToken, refreshToken, params, profile, done) {
                       profile.accessToken = accessToken;
-                      process.nextTick(function() {
+                      process.nextTick(function() {                          
                             return done(null, profile);
                       });
                   }));
