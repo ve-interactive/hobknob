@@ -18,7 +18,7 @@ var passport = require('./auth').init(config);
 
 app.set('views', path.join(__dirname, '/../client/views'));
 app.set('view engine', 'jade');
-app.set('port', process.env.PORT || 5432);
+app.set('port', process.env.PORT || 3006);
 
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
