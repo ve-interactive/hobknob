@@ -2,7 +2,7 @@
     "RequiresAuth": true,
     "etcdHost": "127.0.0.1",
     "etcdPort": "4001",
-"hobknobHost": "127.0.0.1",
+    "hobknobHost": "127.0.0.1",
     "hobknobPort": "5432",
     "AuthProviders":
         {
