@@ -25,3 +25,5 @@ public/bower_components
 config/config_auth_example.json
 
 .DS_Store
+
+/.vscode/*
