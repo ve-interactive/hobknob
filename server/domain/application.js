@@ -1,7 +1,6 @@
 'use strict';
 
 var etcd = require('../etcd');
-var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var config = require('./../../config/config.json');
 var acl = require('./../acl');
@@ -42,14 +41,7 @@ module.exports = {
 
             // todo: not sure if this is correct
             if (config.RequiresAuth) {
-                var userEmail = null;
-                if (req.user.accessToken) {
-                    var waadProfile =  jwt.decode(req.user.accessToken);
-                    userEmail = waadProfile.upn;
-                }
-                else{
-                    userEmail = req.user._json.email;
-                }
+                var userEmail = req.user._json.email;
                 acl.grant(userEmail, applicationName, function (grantErr) {
                     if (grantErr) {
                         cb(grantErr);

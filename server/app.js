@@ -2,7 +2,6 @@
 
 var express = require('express');
 var app = express();
-var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var dashboardRoutes = require('./routes/dashboardRoutes');
 var loadBalancerRoutes = require('./routes/loadbalancerRoutes');
@@ -73,15 +72,8 @@ var authoriseUserForThisApplication = function (req, res, next) {
     }
 
     var applicationName = req.params.applicationName;
-    var userEmail = null;
-    if (req.user.accessToken) {
-        var waadProfile =  jwt.decode(req.user.accessToken);
-        userEmail = waadProfile.upn;
-    }
-    else{
-        userEmail = req.user._json.email;
-    }
-    console.log(userEmail);
+    var userEmail = req.user._json.email;
+   
     acl.assert(userEmail, applicationName, function (err, isAuthroised) {
         if (err || !isAuthroised) {
             res.send(403);
