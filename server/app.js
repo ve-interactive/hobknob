@@ -55,7 +55,7 @@ var ensureAuthenticatedOrRedirectToLogin = function (req, res, next) {
     if (isAuthenticated(req)) {
         return next();
     }
-    res.redirect('/login');
+    res.redirect('/login?authProvider='+Object.keys(config.AuthProviders)[0]);
 };
 
 var ensureAuthenticated = function (req, res, next) {

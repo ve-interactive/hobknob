@@ -23,6 +23,7 @@ module.exports.init = function (config) {
                 },
                 function (accessToken, refreshToken, profile, done) {
                     profile.accessToken = accessToken;
+                    profile._json.authProvider = 'google';
                     process.nextTick(function () {
                         return done(null, profile);
                     });
