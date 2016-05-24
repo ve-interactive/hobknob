@@ -9,10 +9,10 @@ html(lang='en')
         link(href='/bower_components/bootstrap-social/bootstrap-social.css', media='all', rel='stylesheet')
         link(href='/bower_components/font-awesome/css/font-awesome.css', media='all', rel='stylesheet')
         script(src='/bower_components/jquery/dist/jquery.min.js')
-    body(ng-app='featureToggleFrontend')
+    body(ng-app='featureToggleFrontend' ng-cloak)
         #wrapper
             #sidebar-wrapper
-                ul.sidebar-nav(ng-controller="LoginController" ng-cloak)
+                ul.sidebar-nav(ng-controller="LoginController")
                     li.sidebar-brand
                         a.navbar-brand.logo(href='/')
                             img(src='/img/opentable-hr-mono.png')
