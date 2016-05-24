@@ -49,7 +49,8 @@ module.exports.init = function (config) {
                         var profileData = {
                             name: decrypted.given_name,
                             fullName: decrypted.name,
-                            email: decrypted.upn                         
+                            email: decrypted.upn,
+                            authProvider: 'azure'                        
                         };
                         getProfilePhotoFromAD(params.access_token, function (error, data) {
                             if(!error){
