@@ -2,15 +2,15 @@
     "RequiresAuth": true,
     "etcdHost": "127.0.0.1",
     "etcdPort": "4001",
-    "hobknobHost": "127.0.0.1",
-    "hobknobPort": "5432",
+    "hobknobHost": "localhost",
+    "hobknobPort": "3006",
     "AuthProviders":
         {
             "AzureAuth":
             {
-                "AzureClientId": "04fb6794-722d-4b1d-be53-f6d6bc5a62d3",
-                "AzureClientSecret":"OylSOs6WN+r+XSV1+PTToRnipjKefSYsHg/XjRTL0NE=",
-                "AzureTenantId":"0f875460-d445-4ded-8b56-8468a26be9ec"
+                "AzureClientId": "",
+                "AzureClientSecret":"",
+                "AzureTenantId":""
             }
         },
     "categories": [
