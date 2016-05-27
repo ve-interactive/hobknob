@@ -8,7 +8,7 @@ angular.module('featureToggleFrontend')
                 angular.extend(this, data);
             }
         }
-        
+
         // todo: what does this do?
         CurrentUser.create = function (data) {
             return new CurrentUser(data);
@@ -17,17 +17,18 @@ angular.module('featureToggleFrontend')
         CurrentUser.prototype = {
 
             getPicture: function () {
-                var picture;
-                
-                if(this.authProvider == 'azure'){
-                    picture = 'data:image/png;base64,' + this.picture;
-                } else if (this.picture) {
-                    picture = this.picture;
-                } else {
-                   picture = '/img/user-blue.jpeg';
+				var picture;
+
+				if (ENV.AuthProviders.AzureAuth) {
+					picture = 'data:image/png;base64,' + this.picture;
+				} else if (this.picture) {
+					picture = this.picture;
                 }
-                
-                return picture;
+				else {
+					picture = '/img/user-blue.jpeg';
+				}
+
+				return picture;
             },
 
             getUser: function () {

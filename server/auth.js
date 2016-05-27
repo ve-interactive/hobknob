@@ -23,7 +23,6 @@ module.exports.init = function (config) {
                 },
                 function (accessToken, refreshToken, profile, done) {
                     profile.accessToken = accessToken;
-                    profile._json.authProvider = 'google';
                     process.nextTick(function () {
                         return done(null, profile);
                     });
@@ -44,29 +43,27 @@ module.exports.init = function (config) {
                   },
                   function (accessToken, refreshToken, params, profile, done) {
                         profile.accessToken = accessToken;
-                        
+
                         var decrypted = jwt.decode(profile.accessToken);
-                        
+
                         var profileData = {
                             name: decrypted.given_name,
                             fullName: decrypted.name,
-                            email: decrypted.upn,
-                            authProvider: 'azure'                        
+                            email: decrypted.upn
                         };
                         getProfilePhotoFromAD(params.access_token, function (error, data) {
-                            if(!error){
+                            if (!error) {
                                 profileData.picture = data;
                             }
                             else {
                                 console.log(error);
                             }
                             profile._json = profileData;
-                            process.nextTick(function() {                          
+                            process.nextTick(function() {
                                 return done(null, profile);
                             });
                         });
-                        
-                  }));
+                    }));
         }
     }
 
@@ -78,41 +75,41 @@ module.exports.init = function (config) {
         done(null, obj);
     });
 
-    function getProfilePhotoFromAD(token, callback){
+    function getProfilePhotoFromAD(token, callback) {
         var options = {
-            url: "https://graph.windows.net/me/thumbnailPhoto?api-version=1.6",
-            method: "GET",
+            url: 'https://graph.windows.net/me/thumbnailPhoto?api-version=1.6',
+            method: 'GET',
             headers: {
-                "Authorization": "Bearer " + token
+                'Authorization': 'Bearer ' + token
             },
             encoding: null
         };
         var r;
         var req = request(options, function(error, response, body) {
-            if(!error){
-                 if(response.statusCode == 200) {
+            if (!error) {
+                 if (response.statusCode === 200) {
                     try {
-                        console.log("photo");
-                        var base64data = new Buffer(body).toString('base64');
-                        r = base64data;                        
+                        r = new Buffer(body).toString('base64');
+
                         // Call callback with no error, and result of request
                         return callback(null, r);
                     } catch (e) {
                         // Call callback with error
                         return callback(e);
                     }
-                 }else {
-                     //TODO: better error handling
-                     console.log(response.statusCode);
-                     console.log(response.body);
+                 } else {
+                     var errorData = {
+                         StatusCode: response.statusCode,
+                         Body: response.body
+                     };
+                     return callback(errorData);
                  }
             }
             else {
-                console.log("Error: " + error);
+                console.log('Error: ' + error);
                 return callback(error);
             }
         });
-
     }
 
     return passport;

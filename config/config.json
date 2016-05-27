@@ -10,7 +10,7 @@
             {
                 "AzureClientId": "",
                 "AzureClientSecret":"",
-                "AzureTenantId":""
+                "AzureTenantId": ""
             }
         },
     "categories": [
